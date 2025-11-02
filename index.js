@@ -1,15 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 
-
-
-const uri = "mongodb+srv://model-db:4XyNe1PFL3jQaEG7@firstcluster.6t8rb7j.mongodb.net/?appName=firstCluster";
+const uri =
+  "mongodb+srv://model-db:4XyNe1PFL3jQaEG7@firstcluster.6t8rb7j.mongodb.net/?appName=firstCluster";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -17,24 +16,34 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
 async function run() {
   try {
-   
     await client.connect();
-    
+
+    const db = client.db("model-db");
+    const modelCollection = db.collection("models");
+
+    app.get("/models",async(req,res)=>{
+
+        const result = await modelCollection.find().toArray()
+
+
+        res.send(result)
+    })
+
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
   }
 }
 run().catch(console.dir);
-
-
 
 app.get("/", (req, res) => {
   res.send("Server is running Fine!");
