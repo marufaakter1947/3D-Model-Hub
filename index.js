@@ -36,15 +36,15 @@ async function run() {
 
     // details
     app.get("/models/:id", async (req, res) => {
-      const {id} = req.params;
-      console.log(id)
+      const { id } = req.params;
+      console.log(id);
 
-      const result = await modelCollection.findOne({_id: new ObjectId(id)})
+      const result = await modelCollection.findOne({ _id: new ObjectId(id) });
 
       res.send({
         success: true,
-        result
-      })
+        result,
+      });
     });
 
     // post method
@@ -54,6 +54,28 @@ async function run() {
       const data = req.body;
       // console.log(data);
       const result = await modelCollection.insertOne(data);
+      res.send({
+        success: true,
+        result,
+      });
+    });
+
+    // Update method:PUT
+    // updateOne
+    // updateMany
+
+    app.put("/models/:id", async (req, res) => {
+      const { id } = req.params;
+      const data = req.body;
+      // console.log(id)
+      // console.log(data);
+      const objectId = new ObjectId(id)
+      const filter = {_id: objectId}
+      const update = {
+        $set: data
+      }
+      const result = await modelCollection.updateOne(filter,update);
+
       res.send({
         success: true,
         result,
