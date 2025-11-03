@@ -26,13 +26,26 @@ async function run() {
     const db = client.db("model-db");
     const modelCollection = db.collection("models");
 
-    app.get("/models",async(req,res)=>{
+    // get method
+    // find
+    // findOne
+    app.get("/models", async (req, res) => {
+      const result = await modelCollection.find().toArray();
+      res.send(result);
+    });
 
-        const result = await modelCollection.find().toArray()
-
-
-        res.send(result)
-    })
+    // post method
+    // insertMany
+    // insertOne
+    app.post("/models", async (req, res) => {
+      const data = req.body;
+      console.log(data);
+      const result = await modelCollection.insertOne(data);
+      res.send({
+        success: true,
+        result,
+      });
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
