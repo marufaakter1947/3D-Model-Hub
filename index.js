@@ -1,11 +1,21 @@
 const express = require("express");
 const cors = require("cors");
+const admin = require("firebase-admin");
+
+const serviceAccount = require("./serviceKey.json");
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 
 const uri =
   "mongodb+srv://model-db:4XyNe1PFL3jQaEG7@firstcluster.6t8rb7j.mongodb.net/?appName=firstCluster";
